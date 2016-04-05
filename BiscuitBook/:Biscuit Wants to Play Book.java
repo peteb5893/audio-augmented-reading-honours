@@ -1,6 +1,6 @@
 String absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/BiscuitBook/images/";
 String absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/BiscuitBook/sounds/";
-int pageLimit = 13;
+int pageLimit = 11;
 
 void setup2() {
 
