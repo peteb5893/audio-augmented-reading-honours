@@ -23,6 +23,10 @@ int imageIndex;
 PImage currentImage;
 ArrayList <Sound> currentSounds;
 Minim minim;
+String absoluteImagePath;
+String absoluteSoundPath;
+int pageLimit;
+
 
 //variables needed for the Thomas book (State 1)
 AudioSample beep;
@@ -84,14 +88,13 @@ void draw() {
 }
 
 void keyPressed() {
-  if (key == '0') {
-    println("Menu Selected");
-    setState(0);
-  } else if (key == '1') {
-    setState(1);
-  } else if (key == '2') {
-    setState(2);
-  } else if (state == 1) {
+  if (state == 0){ //state 0 - main menu
+    if (key == '1') {
+      setState(1);
+    } else if (key == '2') {
+      setState(2);
+    }
+  } else if (state == 1) { //state 1 - Thomas Book
     if (0<=imageIndex && imageIndex<pageLimit) {
       if (key == ENTER) {
         imageIndex++; // if ENTER button pressed, move to next image in array
@@ -108,7 +111,7 @@ void keyPressed() {
       println("End Of Session");
       exit();
     }
-  } else if (state == 2) {
+  } else if (state == 2) { //state 2 - Biscuit Book
     if (0<=imageIndex && imageIndex<pageLimit) {
       if (key == ENTER) {
         imageIndex++;
@@ -147,12 +150,11 @@ void draw0() {
 }
 
 //state 1 - Thomas Book
-String absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/images/";
-String absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/sounds/";
-int pageLimit = 15;
-
 void setup1() {
-  //audio samples
+  absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/images/";
+  absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/sounds/";
+  pageLimit = 15;
+  
   minim = new Minim(this);
   beep = minim.loadSample(absoluteSoundPath+"beep.mp3");
   bird_noise = minim.loadSample(absoluteSoundPath+"bird_noise.mp3");
@@ -250,7 +252,6 @@ void setup2() {
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/BiscuitBook/sounds/";
   pageLimit = 11;
 
-  //audio samples
   minim = new Minim(this);
   dog = minim.loadSample(absoluteSoundPath+"dog.mp3");
   cat = minim.loadSample(absoluteSoundPath+"cat.mp3");
