@@ -22,9 +22,9 @@ String bodyText;
 int imageIndex;
 PImage currentImage;
 ArrayList <Sound> currentSounds;
+Minim minim;
 
 //variables needed for the Thomas book (State 1)
-Minim minim;
 AudioSample beep;
 AudioSample bird_noise;
 AudioSample cow_moo;
@@ -42,32 +42,17 @@ AudioSample cricket;
 Book biscuitBook;
 
 
-
+// initial setup
 void setup() {
-
   size(872, 635);
   state = 0;
   startState();
 }
 
+// decides which state to load
 void setState(int newState) {
-  endState();
   state = newState;
   startState();
-}
-
-void endState() {
-  switch (state) {
-  case 0:
-    cleanup0();
-    break;
-  case 1:
-    cleanup1();
-    break;
-  case 2:
-    cleanup2();
-    break;
-  }
 }
 
 void startState() {
@@ -85,7 +70,6 @@ void startState() {
 }
 
 void draw() {
-
   switch (state) {
   case 0:
     draw0();
@@ -161,8 +145,6 @@ void setup0() {
 }
 void draw0() {
 }
-void cleanup0() {
-}
 
 //state 1 - Thomas Book
 String absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/images/";
@@ -170,7 +152,6 @@ String absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-h
 int pageLimit = 15;
 
 void setup1() {
-
   //audio samples
   minim = new Minim(this);
   beep = minim.loadSample(absoluteSoundPath+"beep.mp3");
@@ -263,15 +244,12 @@ void draw1() {
   }
 }
 
-void cleanup1() {
-}
-
-//state 2
+//state 2 - Biscuit Book
 void setup2() {
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/BiscuitBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/BiscuitBook/sounds/";
   pageLimit = 11;
-  
+
   //audio samples
   minim = new Minim(this);
   dog = minim.loadSample(absoluteSoundPath+"dog.mp3");
@@ -361,7 +339,4 @@ void draw2() {
   for (int i=0; i<currentSounds.size(); i++) {
     currentSounds.get(i).checkSoundTriggered();
   }
-}
-
-void cleanup2() {
 }
