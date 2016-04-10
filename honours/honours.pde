@@ -8,6 +8,7 @@ import ddf.minim.ugens.*;
 
 //global variables
 int state;
+int technique;
 
 //variables needed for start menu (State 0)
 PFont f;
@@ -88,13 +89,27 @@ void draw() {
 }
 
 void keyPressed() {
-  if (state == 0){ //state 0 - main menu
+  if (state == 0) { //state 0 - main menu
     if (key == '1') {
-      setState(1);
+      setState(1); // Thomas Book
     } else if (key == '2') {
-      setState(2);
+      setState(2); // Biscuit Book
     }
   } else if (state == 1) { //state 1 - Thomas Book
+    if (key == '1') { //Traditional Reading (no sounds needed)
+      technique = 1;
+      println("Traditional Reading");
+    } else if (key == '2') {//Audio-assisted Reading w/ Eyetracker (run mouse control script from terminal)
+      technique = 2;
+      println("Audio-assisted Reading w/ Eyetracker");
+    } else if (key == '3') {//Audiobook (play audiobook on each page 
+      technique = 3;
+      println("Audiobook");
+    } else if (key == '4') {//Estimated Reading Pace (load estimation page, then play sound based on estimation)
+      technique = 4;
+      println("Estimated Reading Pace");
+    }
+
     if (0<=imageIndex && imageIndex<pageLimit) {
       if (key == ENTER) {
         imageIndex++; // if ENTER button pressed, move to next image in array
@@ -112,6 +127,20 @@ void keyPressed() {
       exit();
     }
   } else if (state == 2) { //state 2 - Biscuit Book
+    if (key == '1') { //Traditional Reading (no sounds needed)
+      technique = 1;
+      println("Traditional Reading");
+    } else if (key == '2') {//Audio-assisted Reading w/ Eyetracker (run mouse control script from terminal)
+      technique = 2;
+      println("Audio-assisted Reading w/ Eyetracker");
+    } else if (key == '3') {//Audiobook (play audiobook on each page 
+      technique = 3;
+      println("Audiobook");
+    } else if (key == '4') {//Estimated Reading Pace (load estimation page, then play sound based on estimation)
+      technique = 4;
+      println("Estimated Reading Pace");
+    }
+
     if (0<=imageIndex && imageIndex<pageLimit) {
       if (key == ENTER) {
         imageIndex++;
@@ -143,7 +172,7 @@ void setup0() {
 
   textFont(f, 24);
   textAlign(LEFT);
-  bodyText = "This program has been built by Peter Bennington for his research-oriented honours project. Its purpose is to allow participants in the study to try out four different reading techniques and give feedback on their experiences and preferences. The reading techniques being evaluated in this particular study are:\n - Traditional Reading\n - Audiobook\n - Audio-Augmented Reading using Estimated Reading-Pace\n - Audio-Augmented Reading using Eyetracking.\n\nPlease press the numbered key on the keyboard that matches your participant ID to begin the experiment.\nYou may have to wait a moment while the book loads the required resources";
+  bodyText = "This program has been built by Peter Bennington for his research-oriented honours project. Its purpose is to allow participants in the study to try out four different reading techniques and give feedback on their experiences and preferences. The reading techniques being evaluated in this particular study are:\n - Traditional Reading\n - Audio-Augmented Reading using Eyetracking\n - Audiobook\n - Audio-Augmented Reading using Estimated Reading-Pace\n\nPlease press the numbered key on the keyboard to load the book, and then another numbered key to select the technique.You may have to wait a moment while the book loads the required resources. Thank you for your patience.";
   text(bodyText, topX, topY+120, bottomX, bottomY);
 }
 void draw0() {
@@ -154,7 +183,7 @@ void setup1() {
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/sounds/";
   pageLimit = 15;
-  
+
   minim = new Minim(this);
   beep = minim.loadSample(absoluteSoundPath+"beep.mp3");
   bird_noise = minim.loadSample(absoluteSoundPath+"bird_noise.mp3");
@@ -240,9 +269,24 @@ void setup1() {
 }
 
 void draw1() {
+  //all techniques need to update the image
   image(currentImage, 0, 0);
-  for (int i=0; i<currentSounds.size(); i++) {
-    currentSounds.get(i).checkSoundTriggered();
+
+  //if technique 2, need to also check if sounds get triggered
+  if (technique == 2) {
+    for (int i=0; i<currentSounds.size(); i++) {
+      currentSounds.get(i).checkSoundTriggered();
+    }
+  }
+
+  //if technique 3, need the full audio to play on page load
+  else if (technique == 3) {
+    //playAudio
+  }
+
+  //if technique 4, need to play sounds based on the estimated reading pace
+  else if (technique == 4) {
+    //estimateReadingPaceAudio
   }
 }
 
@@ -336,8 +380,23 @@ void setup2() {
 }
 
 void draw2() {
+  //all techniques need to update the image
   image(currentImage, 0, 0);
-  for (int i=0; i<currentSounds.size(); i++) {
-    currentSounds.get(i).checkSoundTriggered();
+
+  //if technique 2, need to also check if sounds get triggered
+  if (technique == 2) {
+    for (int i=0; i<currentSounds.size(); i++) {
+      currentSounds.get(i).checkSoundTriggered();
+    }
+  }
+
+  //if technique 3, need the full audio to play on page load
+  else if (technique == 3) {
+    //playAudio
+  }
+
+  //if technique 4, need to play sounds based on the estimated reading pace
+  else if (technique == 4) {
+    //estimateReadingPaceAudio
   }
 }
