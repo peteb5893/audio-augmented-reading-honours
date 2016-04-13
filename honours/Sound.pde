@@ -13,20 +13,15 @@ class Sound {
   boolean hasPlayed;
 
   //constructor
-  Sound(AudioSample sound, int x1, int y1, int x2, int y2) {
+  Sound(AudioSample sound, int x1, int y1, int x2, int y2, int wordPos, int total) {
     soundFile = sound;
     minX = x1;
     minY = y1;
     maxX = x2;
     maxY = y2;
-  }
 
-  //constructor for Estimated Reading Pace
-  Sound(AudioSample sound, int wordPos, int total, int wordsPerMinute) {
-    soundFile = sound;
     wordOnPage = wordPos;
     totalPageWords = total;
-    wpm = wordsPerMinute;
 
     hasPlayed = false;
   }

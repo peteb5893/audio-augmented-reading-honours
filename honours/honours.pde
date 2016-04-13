@@ -36,6 +36,7 @@ Book currentBook = new Book();
 
 //variables needed for estimating reading pace
 float wpm;
+int result;
 float participantWPM;
 float timerStart = 0;
 float offset;
@@ -167,13 +168,13 @@ void keyPressed() {
     if (state == 9) {
       // ========================Controlling the timer for estimating reading pace ========================
       if (key==' ' && stopped) { // start when SPACEBAR pressed
-        println("Start Timer");
+        println("Timer Started");
         stopped = false;
         continued = false;
         timerStart = millis();
       }
       if (key == ENTER && !stopped) { // stop when ENTER pressed
-        println("Stop Timer");
+        println("Timer Stopped");
         stopped = true;
       }
       //===================================================================================================
@@ -227,7 +228,6 @@ void setup0() {
   textFont(f);
   fill(0);
   textAlign(CENTER);
-  title = "Encouraging Literacy Through Audio Augmented Reading";
   text(title, topX, topY, bottomX, bottomY);
 
   textFont(f, 24);
@@ -240,6 +240,7 @@ void draw0() {
 
 //========================================== Book 1 - Happy Birthday Thomas
 void setup1() {
+
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/sounds/";
   pageLimit = 15;
@@ -254,14 +255,12 @@ void setup1() {
   there_goes_my_timber = minim.loadSample(absoluteSoundPath+"timber.mp3");
   train = minim.loadSample(absoluteSoundPath+"train.mp3");
 
-  //happy birthday thomas book
-  //currentBook = new Book();
 
   Page hBTPage1 = new Page(absoluteImagePath+"thomas1.png");  
   currentBook.addNewPage(hBTPage1);
 
   Page hBTPage2 = new Page(absoluteImagePath+"thomas2.png");   
-  Sound hBTSound1 = new Sound(beep, 36, 40, 210, 63);
+  Sound hBTSound1 = new Sound(beep, 36, 40, 210, 63, 1, 16);
   hBTPage2.addNewSound(hBTSound1);
   currentBook.addNewPage(hBTPage2);
 
@@ -275,13 +274,13 @@ void setup1() {
   currentBook.addNewPage(hBTPage5);
 
   Page hBTPage6 = new Page(absoluteImagePath+"thomas6.png");   
-  Sound hBTSound2 = new Sound(oh_no_my_hat, 244, 56, 344, 80);
+  Sound hBTSound2 = new Sound(oh_no_my_hat, 244, 56, 344, 80, 3, 12);
   hBTPage6.addNewSound(hBTSound2);
-  Sound hBTSound3 = new Sound(goat_noise, 240, 360, 356, 389);
+  Sound hBTSound3 = new Sound(goat_noise, 240, 360, 356, 389, 6, 12);
   hBTPage6.addNewSound(hBTSound3);
-  Sound hBTSound4 = new Sound(there_goes_my_timber, 686, 53, 789, 78);
+  Sound hBTSound4 = new Sound(there_goes_my_timber, 686, 53, 789, 78, 9, 12);
   hBTPage6.addNewSound(hBTSound4);
-  Sound hBTSound5 = new Sound(bird_noise, 693, 361, 772, 382);
+  Sound hBTSound5 = new Sound(bird_noise, 693, 361, 772, 382, 12, 12);
   hBTPage6.addNewSound(hBTSound5);
   currentBook.addNewPage(hBTPage6);
 
@@ -295,9 +294,9 @@ void setup1() {
   currentBook.addNewPage(hBTPage9);
 
   Page hBTPage10 = new Page(absoluteImagePath+"thomas10.png");   
-  Sound hBTSound6 = new Sound(cow_moo, 105, 69, 197, 102);
+  Sound hBTSound6 = new Sound(cow_moo, 105, 69, 197, 102, 4, 15);
   hBTPage10.addNewSound(hBTSound6);
-  Sound hBTSound7 = new Sound(human_moo, 556, 142, 617, 162);
+  Sound hBTSound7 = new Sound(human_moo, 556, 142, 617, 162, 14, 15);
   hBTPage10.addNewSound(hBTSound7);
   currentBook.addNewPage(hBTPage10);  
 
@@ -305,7 +304,7 @@ void setup1() {
   currentBook.addNewPage(hBTPage11);
 
   Page hBTPage12 = new Page(absoluteImagePath+"thomas12.png");   
-  Sound hBTSound8 = new Sound(train, 623, 39, 700, 59);
+  Sound hBTSound8 = new Sound(train, 623, 39, 700, 59, 12, 13);
   hBTPage12.addNewSound(hBTSound8);
   currentBook.addNewPage(hBTPage12);
 
@@ -332,21 +331,26 @@ void draw1() {
   //all techniques need to update the image
   image(currentImage, 0, 0);
 
-  //if technique 2, need to also check if sounds get triggered
+  //if using eyetracker, need to also check if sounds get triggered
   if (technique == 2) {
+    noCursor(); // hide cursor since will be using the eye tracker (won't work in presentation mode though)
     for (int i=0; i<currentSounds.size(); i++) {
       currentSounds.get(i).checkSoundTriggered();
     }
   }
 
-  //if technique 3, need the full audio to play on page load
+  //if using audiobook, need the full audio to play on page load
   else if (technique == 3) {
     //playAudio
   }
 
-  //if technique 4, need to play sounds based on the estimated reading pace
+  //if using estimated reading pace, need to play sounds based on wpm
   else if (technique == 4) {
-    //playSoundAtEstimatedPace
+    for (int i=0; i<currentSounds.size(); i++) {
+      if (currentSounds.get(i).hasPlayed == false) {
+        currentSounds.get(i).estimateSoundEffect(result);
+      }
+    }
   }
 }
 
@@ -361,74 +365,72 @@ void setup2() {
   cat = minim.loadSample(absoluteSoundPath+"cat.mp3");
   cricket = minim.loadSample(absoluteSoundPath+"cricket.mp3");
 
-  //Biscuit Wants to Play Book
-  currentBook = new Book();
 
   Page biscuitPage1 = new Page(absoluteImagePath+"biscuit1.png");
   currentBook.addNewPage(biscuitPage1);
 
   Page biscuitPage2 = new Page(absoluteImagePath+"biscuit2.png");
-  Sound biscuitSound1 = new Sound(dog, 526, 462, 666, 482);
+  Sound biscuitSound1 = new Sound(dog, 526, 462, 666, 482, 1, 7);
   biscuitPage2.addNewSound(biscuitSound1);
   currentBook.addNewPage(biscuitPage2);
 
   Page biscuitPage3 = new Page(absoluteImagePath+"biscuit3.png");
-  Sound biscuitSound2 = new Sound(cat, 161, 490, 246, 522);
-  Sound biscuitSound3 = new Sound(cat, 515, 83, 676, 108);
+  Sound biscuitSound2 = new Sound(cat, 161, 490, 246, 522, 1, 9);
+  Sound biscuitSound3 = new Sound(cat, 515, 83, 676, 108, 4, 9);
   biscuitPage3.addNewSound(biscuitSound2);
   biscuitPage3.addNewSound(biscuitSound3);
   currentBook.addNewPage(biscuitPage3);
 
   Page biscuitPage4 = new Page(absoluteImagePath+"biscuit4.png");
-  Sound biscuitSound4 = new Sound(dog, 516, 47, 660, 68);
+  Sound biscuitSound4 = new Sound(dog, 516, 47, 660, 68, 1, 9);
   biscuitPage4.addNewSound(biscuitSound4);
   currentBook.addNewPage(biscuitPage4);
 
   Page biscuitPage5 = new Page(absoluteImagePath+"biscuit5.png");
-  Sound biscuitSound5 = new Sound(cat, 91, 415, 254, 447);
-  Sound biscuitSound6 = new Sound(dog, 494, 472, 641, 498);
+  Sound biscuitSound5 = new Sound(cat, 91, 415, 254, 447, 1, 17);
+  Sound biscuitSound6 = new Sound(dog, 494, 472, 641, 498, 11, 17);
   biscuitPage5.addNewSound(biscuitSound5);
   biscuitPage5.addNewSound(biscuitSound6);
   currentBook.addNewPage(biscuitPage5);
 
   Page biscuitPage6 = new Page(absoluteImagePath+"biscuit6.png");
-  Sound biscuitSound7 = new Sound(dog, 107, 452, 186, 481);
-  Sound biscuitSound8 = new Sound(cat, 504, 466, 669, 490);
+  Sound biscuitSound7 = new Sound(dog, 107, 452, 186, 481, 1, 12);
+  Sound biscuitSound8 = new Sound(cat, 504, 466, 669, 490, 6, 12);
   biscuitPage6.addNewSound(biscuitSound7);
   biscuitPage6.addNewSound(biscuitSound8);
   currentBook.addNewPage(biscuitPage6);
 
   Page biscuitPage7 = new Page(absoluteImagePath+"biscuit7.png");
-  Sound biscuitSound9 = new Sound(dog, 82, 452, 235, 287);
-  Sound biscuitSound10 = new Sound(cat, 481, 47, 652, 77);
+  Sound biscuitSound9 = new Sound(dog, 82, 452, 235, 287, 1, 14);
+  Sound biscuitSound10 = new Sound(cat, 481, 47, 652, 77, 8, 14);
   biscuitPage7.addNewSound(biscuitSound9);
   biscuitPage7.addNewSound(biscuitSound10);
   currentBook.addNewPage(biscuitPage7);
 
   Page biscuitPage8 = new Page(absoluteImagePath+"biscuit8.png");
-  Sound biscuitSound11 = new Sound(cat, 132, 484, 304, 518);
+  Sound biscuitSound11 = new Sound(cat, 132, 484, 304, 518, 1, 8);
   biscuitPage8.addNewSound(biscuitSound11);
   currentBook.addNewPage(biscuitPage8);
 
   Page biscuitPage9 = new Page(absoluteImagePath+"biscuit9.png");
-  Sound biscuitSound12 = new Sound(cat, 97, 446, 272, 483);
-  Sound biscuitSound13 = new Sound(dog, 651, 81, 735, 111);
+  Sound biscuitSound12 = new Sound(cat, 97, 446, 272, 483, 1, 14);
+  Sound biscuitSound13 = new Sound(dog, 651, 81, 735, 111, 10, 14);
   biscuitPage9.addNewSound(biscuitSound12);
   biscuitPage9.addNewSound(biscuitSound13);
   currentBook.addNewPage(biscuitPage9);
 
   Page biscuitPage10 = new Page(absoluteImagePath+"biscuit10.png");
-  Sound biscuitSound14 = new Sound(dog, 478, 491, 698, 517);
+  Sound biscuitSound14 = new Sound(dog, 478, 491, 698, 517, 1, 8);
   biscuitPage10.addNewSound(biscuitSound14);
   currentBook.addNewPage(biscuitPage10);
 
   Page biscuitPage11 = new Page(absoluteImagePath+"biscuit11.png");
-  Sound biscuitSound15 = new Sound(dog, 244, 248, 396, 288);
+  Sound biscuitSound15 = new Sound(dog, 244, 248, 396, 288, 1, 9);
   biscuitPage11.addNewSound(biscuitSound15);
   currentBook.addNewPage(biscuitPage11);
 
   Page biscuitPage12 = new Page(absoluteImagePath+"biscuit12.png");
-  Sound biscuitSound16 = new Sound(cat, 95, 62, 273, 96);
+  Sound biscuitSound16 = new Sound(cat, 95, 62, 273, 96, 1, 10);
   biscuitPage12.addNewSound(biscuitSound16);
   currentBook.addNewPage(biscuitPage12);
 
@@ -457,7 +459,9 @@ void draw2() {
 
   //if technique 4, need to play sounds based on the estimated reading pace
   else if (technique == 4) {
-    //estimateReadingPaceAudio
+    for (int i=0; i<currentSounds.size(); i++) {
+      currentSounds.get(i).estimateSoundEffect(result);
+    }
   }
 }
 
@@ -536,14 +540,19 @@ void draw9() {
     text("\"Nearly ten years had passed since the Dursleys had woken up to find their nephew on the front step, but Privet Drive had hardly changed at all. " +
       "The sun rose on the same tidy front gardens and lit up the brass number four on the Dursleys' front door; it crept into their living room, which was " +
       "almost exactly the same as it had been on the night when Mr. Dursley had seen that fateful news report about the owls. " +
-      "Only the photographs on the mantelpiece really showed how much time had passed.\"", topX, topY+220, bottomX, bottomY);
+      "Only the photographs on the mantelpiece really showed how much time had passed.\"\n\nPress ENTER to stop the timer.", topX, topY+220, bottomX, bottomY);
   }
 
   if (stopped && seconds > 0) {
     wpm = (92/seconds)*60;
+    result = (int)Math.round(wpm);
     textFont(f, 30);
     text("You took "+nf(seconds, 0, 2)+" seconds to read 92 words", topX, topY+360, bottomX, bottomY);
-    text("Your estimated reading pace is: " + nf(wpm, 0, 0) + " words per minute", topX, topY+400, bottomX, bottomY); // 92 words in paragraph
+    //text("Your estimated reading pace is: " + nf(wpm, 0, 0) + " words per minute\n\nPress a number key to select the book to read", topX, topY+400, bottomX, bottomY); // 92 words in paragraph
+    text("Your estimated reading pace is: " + result + " words per minute\n\nPress a number key to select the book to read", topX, topY+400, bottomX, bottomY); // 92 words in paragraph
+    strokeWeight(2);
+    line(topX+275, topY+395, topX+345, topY+395);
+    line(topX+480, topY+435, topX+550, topY+435);
   }
 }
 
