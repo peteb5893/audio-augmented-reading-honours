@@ -93,6 +93,9 @@ void startState() {
   case 4:
     setup4();
     break;
+  case 5:
+    setup5();
+    break;
   case 6:
     setup6();
     break;
@@ -124,6 +127,9 @@ void draw() {
     break;
   case 4:
     draw4();
+    break;
+  case 5:
+    draw5();
     break;
   case 6:
     draw6();
@@ -216,7 +222,16 @@ void keyPressed() {
       }
     } else if (imageIndex>=pageLimit && key == ENTER) {
       println("End Of Session");
-      exit();
+      setState(5);
+      //exit();
+    }
+  }
+
+  // once the participant has completed the questionnaires press ENTER or 0 to return to Main Menu
+  else if (state == 5) {
+    if (key == ENTER || key == '0') {
+      println("Return to Main Menu");
+      setState(0);
     }
   }
 }
@@ -325,15 +340,26 @@ void setup1() {
   Page current = currentBook.pages.get(imageIndex);
   currentImage = current.pageImage;
   currentSounds = current.sounds;
+
+  //if using audiobook, need the full audio to play on page load
+  if (technique == 3) {
+    AudioSample audioBook = minim.loadSample("/Users/peterbennington/Desktop/Audiobooks/happyBirthdayThomas.mp3");
+    audioBook.trigger(); // works, but maybe try to automate page turning...
+  }
 }
 
 void draw1() {
   //all techniques need to update the image
   image(currentImage, 0, 0);
 
-  //if using eyetracker, need to also check if sounds get triggered
-  if (technique == 2) {
-    noCursor(); // hide cursor since will be using the eye tracker (won't work in presentation mode though)
+  //if using traditional reading method, no need to load sounds
+  if (technique == 1) {
+    // do nothing
+  }
+
+  //if using eyetracker, need to check if sounds get triggered
+  else if (technique == 2) {
+    //noCursor(); // hide cursor since will be using the eye tracker (won't work in presentation mode though)
     for (int i=0; i<currentSounds.size(); i++) {
       currentSounds.get(i).checkSoundTriggered();
     }
@@ -341,7 +367,7 @@ void draw1() {
 
   //if using audiobook, need the full audio to play on page load
   else if (technique == 3) {
-    //playAudio
+    //audio file loaded in setup function for each book
   }
 
   //if using estimated reading pace, need to play sounds based on wpm
@@ -439,6 +465,12 @@ void setup2() {
   Page current = currentBook.pages.get(imageIndex);
   currentImage = current.pageImage;
   currentSounds = current.sounds;
+
+  //if using audiobook, need the full audio to play on page load
+  if (technique == 3) {
+    AudioSample audioBook = minim.loadSample("/Users/peterbennington/Desktop/Audiobooks/biscuitWantsToPlay.mp3");
+    audioBook.trigger(); // works, but maybe try to automate page turning...
+  }
 }
 
 void draw2() {
@@ -475,6 +507,16 @@ void draw3() {
 void setup4() {
 }
 void draw4() {
+}
+//========================================== Task Completion Screen
+void setup5() {
+  techniqueTitle = "End of Task";
+  bodyText = "You have completed the task for this technique. I would now like you to fill in a quick subjective questionnaire and"+
+    " NASA TLX form to find out how difficult and or satisfying you found the technique.\nOnce you have completed the questionnaires,"+
+    " press ENTER to return to the main menu. You are welcome to take a minute or two as a break before continuing with the experiment";
+  displayInfo(techniqueTitle, bodyText);
+}
+void draw5() {
 }
 
 //========================================== Traditional Reading
