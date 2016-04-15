@@ -1,4 +1,4 @@
-//libraries
+//libraries //<>//
 import ddf.minim.*;
 import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
@@ -33,17 +33,21 @@ String absoluteImagePath;
 String absoluteSoundPath;
 int pageLimit;
 Book currentBook = new Book();
+float timePageLoaded;
+
+//variables needed for eyetracker
+boolean mouseVisible;
 
 //variables needed for estimating reading pace
 float wpm;
-int result;
+float result;
 float participantWPM;
 float timerStart = 0;
 float offset;
 float mill;
-float hundredths;
+//float hundredths;
 float seconds;
-float minutes;
+//float minutes;
 boolean stopped = true;
 boolean continued = false;
 
@@ -149,7 +153,6 @@ void draw() {
 void keyPressed() {
   // if on the menu state should be able to choose a technique
   if (state == 0) {
-    // techniques
     if (key == '6') {
       technique = 1;
       println("Traditional Reading Selected");
@@ -182,26 +185,26 @@ void keyPressed() {
       if (key == ENTER && !stopped) { // stop when ENTER pressed
         println("Timer Stopped");
         stopped = true;
-      }
+      }        
       //===================================================================================================
     } 
     if (key == '0') {
       println("Main Menu Selected");
       setState(0);
     } 
-    if (key == '1') {
+    else if (key == '1') {
       println("Thomas Book Selected");
       setState(1);
     } 
-    if (key == '2') {
+    else if (key == '2') {
       println("Biscuit Book Selected");
       setState(2);
     } 
-    if (key == '3') {
+    else if (key == '3') {
       println("Book Selected");
       setState(3);
     } 
-    if (key == '4') {
+    else if (key == '4') {
       println("Book Selected");
       setState(4);
     }
@@ -209,11 +212,24 @@ void keyPressed() {
   // for all books, ENTER for next page, BACKSPACE for previous page
   else if (state == 1 | state == 2 | state == 3 | state == 4) {
     if (0<=imageIndex && imageIndex<pageLimit) {
+      // allow user to toggle visibility of mouse (for eyetracker mostly) by using the SPACEBAR
+      if (key == ' ') {
+        if (mouseVisible) {
+          mouseVisible = false;
+          noCursor(); // hide cursor since will be using the eye tracker (won't work in presentation mode though)
+        } else {
+          mouseVisible = true;
+          cursor();
+        }
+      }
+
       if (key == ENTER) {
         imageIndex++; // if ENTER button pressed, move to next image in array
         currentImage = currentBook.pages.get(imageIndex).pageImage;      
         currentSounds = currentBook.pages.get(imageIndex).sounds;
         println("imageIndex = " + imageIndex);
+        timePageLoaded = millis();
+        println("timePageLoaded="+timePageLoaded);
       } else if (key == BACKSPACE) {
         imageIndex--; // if BACKSPACE button pressed, move back to previous image
         currentImage = currentBook.pages.get(imageIndex).pageImage;      
@@ -343,7 +359,7 @@ void setup1() {
 
   //if using audiobook, need the full audio to play on page load
   if (technique == 3) {
-    AudioSample audioBook = minim.loadSample("/Users/peterbennington/Desktop/Audiobooks/happyBirthdayThomas.mp3");
+    AudioSample audioBook = minim.loadSample("/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/audiobook/happyBirthdayThomas.mp3");
     audioBook.trigger(); // works, but maybe try to automate page turning...
   }
 }
@@ -359,7 +375,6 @@ void draw1() {
 
   //if using eyetracker, need to check if sounds get triggered
   else if (technique == 2) {
-    //noCursor(); // hide cursor since will be using the eye tracker (won't work in presentation mode though)
     for (int i=0; i<currentSounds.size(); i++) {
       currentSounds.get(i).checkSoundTriggered();
     }
@@ -367,14 +382,15 @@ void draw1() {
 
   //if using audiobook, need the full audio to play on page load
   else if (technique == 3) {
-    //audio file loaded in setup function for each book
+    //audio file loaded in the setup function for each book
+    //do nothing here, that is intentional
   }
 
   //if using estimated reading pace, need to play sounds based on wpm
   else if (technique == 4) {
     for (int i=0; i<currentSounds.size(); i++) {
       if (currentSounds.get(i).hasPlayed == false) {
-        currentSounds.get(i).estimateSoundEffect(result);
+        currentSounds.get(i).estimateSoundEffect(result, timePageLoaded);
       }
     }
   }
@@ -468,7 +484,7 @@ void setup2() {
 
   //if using audiobook, need the full audio to play on page load
   if (technique == 3) {
-    AudioSample audioBook = minim.loadSample("/Users/peterbennington/Desktop/Audiobooks/biscuitWantsToPlay.mp3");
+    AudioSample audioBook = minim.loadSample("/Users/peterbennington/git/audio-augmented-reading-honours/BiscuitBook/audiobook/biscuitWantsToPlay.mp3");
     audioBook.trigger(); // works, but maybe try to automate page turning...
   }
 }
@@ -492,7 +508,9 @@ void draw2() {
   //if technique 4, need to play sounds based on the estimated reading pace
   else if (technique == 4) {
     for (int i=0; i<currentSounds.size(); i++) {
-      currentSounds.get(i).estimateSoundEffect(result);
+      if (currentSounds.get(i).hasPlayed == false) {
+        currentSounds.get(i).estimateSoundEffect(result, timePageLoaded);
+      }
     }
   }
 }
@@ -575,9 +593,7 @@ void draw9() {
     if (continued) mill += offset;
 
     seconds = mill / 1000;
-    minutes = seconds / 60;
     seconds = seconds % 60;
-    hundredths = mill / 10 % 100;
 
     text("\"Nearly ten years had passed since the Dursleys had woken up to find their nephew on the front step, but Privet Drive had hardly changed at all. " +
       "The sun rose on the same tidy front gardens and lit up the brass number four on the Dursleys' front door; it crept into their living room, which was " +
@@ -590,7 +606,6 @@ void draw9() {
     result = (int)Math.round(wpm);
     textFont(f, 30);
     text("You took "+nf(seconds, 0, 2)+" seconds to read 92 words", topX, topY+360, bottomX, bottomY);
-    //text("Your estimated reading pace is: " + nf(wpm, 0, 0) + " words per minute\n\nPress a number key to select the book to read", topX, topY+400, bottomX, bottomY); // 92 words in paragraph
     text("Your estimated reading pace is: " + result + " words per minute\n\nPress a number key to select the book to read", topX, topY+400, bottomX, bottomY); // 92 words in paragraph
     strokeWeight(2);
     line(topX+275, topY+395, topX+345, topY+395);
