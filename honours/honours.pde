@@ -31,6 +31,7 @@ ArrayList <Sound> currentSounds;
 Minim minim;
 String absoluteImagePath;
 String absoluteSoundPath;
+String absoluteAudiobookPath;
 int pageLimit;
 Book currentBook = new Book();
 float timePageLoaded;
@@ -65,6 +66,24 @@ AudioSample train;
 AudioSample dog;
 AudioSample cat;
 AudioSample cricket;
+
+//variables needed for the What's That Noise? book (State 3)
+AudioSample tweet_tweet;
+AudioSample shush;
+AudioSample woof_woof;
+AudioSample baa;
+AudioSample zzz;
+AudioSample rawr;
+
+//variables needed for the The Haunted House book (State 4)
+AudioSample thunder_bang;
+AudioSample bob_bob;
+AudioSample snake_hiss;
+AudioSample aargh;
+AudioSample turtle_noise;
+AudioSample cat_scream;
+AudioSample rat_shut_up;
+AudioSample dog_bark;
 
 
 // initial setup
@@ -191,20 +210,16 @@ void keyPressed() {
     if (key == '0') {
       println("Main Menu Selected");
       setState(0);
-    } 
-    else if (key == '1') {
+    } else if (key == '1') {
       println("Thomas Book Selected");
       setState(1);
-    } 
-    else if (key == '2') {
+    } else if (key == '2') {
       println("Biscuit Book Selected");
       setState(2);
-    } 
-    else if (key == '3') {
+    } else if (key == '3') {
       println("Book Selected");
       setState(3);
-    } 
-    else if (key == '4') {
+    } else if (key == '4') {
       println("Book Selected");
       setState(4);
     }
@@ -274,6 +289,7 @@ void setup1() {
 
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/sounds/";
+  absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/audiobook/";
   pageLimit = 15;
 
   minim = new Minim(this);
@@ -359,7 +375,7 @@ void setup1() {
 
   //if using audiobook, need the full audio to play on page load
   if (technique == 3) {
-    AudioSample audioBook = minim.loadSample("/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/audiobook/happyBirthdayThomas.mp3");
+    AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"happyBirthdayThomas.mp3");
     audioBook.trigger(); // works, but maybe try to automate page turning...
   }
 }
@@ -400,6 +416,7 @@ void draw1() {
 void setup2() {
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/biscuitBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/biscuitBook/sounds/";
+  absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/biscuitBook/audiobook/";
   pageLimit = 11;
 
   minim = new Minim(this);
@@ -484,7 +501,7 @@ void setup2() {
 
   //if using audiobook, need the full audio to play on page load
   if (technique == 3) {
-    AudioSample audioBook = minim.loadSample("/Users/peterbennington/git/audio-augmented-reading-honours/BiscuitBook/audiobook/biscuitWantsToPlay.mp3");
+    AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"biscuitWantsToPlay.mp3");
     audioBook.trigger(); // works, but maybe try to automate page turning...
   }
 }
@@ -515,16 +532,284 @@ void draw2() {
   }
 }
 
-//========================================== Book 3 - 
+//========================================== Book 3 - What's That Noise?
 void setup3() {
+  absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/WhatsThatNoiseBook/images/";
+  absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/WhatsThatNoiseBook/sounds/";
+  absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/WhatsThatNoiseBook/audiobook/";
+  pageLimit = 24;
+
+  minim = new Minim(this);
+  tweet_tweet = minim.loadSample(absoluteSoundPath+"tweet_tweet.mp3");
+  shush = minim.loadSample(absoluteSoundPath+"shush.mp3");
+  woof_woof = minim.loadSample(absoluteSoundPath+"woof_woof.mp3");
+  baa = minim.loadSample(absoluteSoundPath+"baa.mp3");
+  zzz = minim.loadSample(absoluteSoundPath+"zzz.mp3");
+  rawr = minim.loadSample(absoluteSoundPath+"rawr.mp3"); // not used
+
+
+  Page wTNPage1 = new Page(absoluteImagePath+"whatsThatNoise1.png");  
+  currentBook.addNewPage(wTNPage1);
+
+  Page wTNPage2 = new Page(absoluteImagePath+"whatsThatNoise2.png");
+  Sound wTNSound1 = new Sound(tweet_tweet, 344, 520, 549, 548, 1, 2);
+  wTNPage2.addNewSound(wTNSound1); 
+  currentBook.addNewPage(wTNPage2);
+
+  Page wTNPage3 = new Page(absoluteImagePath+"whatsThatNoise3.png");
+  currentBook.addNewPage(wTNPage3);
+
+  Page wTNPage4 = new Page(absoluteImagePath+"whatsThatNoise4.png");
+  currentBook.addNewPage(wTNPage4);
+
+  Page wTNPage5 = new Page(absoluteImagePath+"whatsThatNoise5.png");
+  currentBook.addNewPage(wTNPage5);
+
+  Page wTNPage6 = new Page(absoluteImagePath+"whatsThatNoise6.png");
+  Sound wTNSound2 = new Sound(shush, 389, 518, 492, 543, 1, 2);
+  wTNPage6.addNewSound(wTNSound2); 
+  currentBook.addNewPage(wTNPage6);
+
+  Page wTNPage7 = new Page(absoluteImagePath+"whatsThatNoise7.png");
+  Sound wTNSound3 = new Sound(woof_woof, 347, 520, 542, 551, 1, 1);
+  wTNPage7.addNewSound(wTNSound3); 
+  currentBook.addNewPage(wTNPage7);
+
+  Page wTNPage8 = new Page(absoluteImagePath+"whatsThatNoise8.png");
+  currentBook.addNewPage(wTNPage8);
+
+  Page wTNPage9 = new Page(absoluteImagePath+"whatsThatNoise9.png");
+  currentBook.addNewPage(wTNPage9);
+
+  Page wTNPage10 = new Page(absoluteImagePath+"whatsThatNoise10.png");
+  currentBook.addNewPage(wTNPage10);
+
+  Page wTNPage11 = new Page(absoluteImagePath+"whatsThatNoise11.png");
+  currentBook.addNewPage(wTNPage11);
+
+  Page wTNPage12 = new Page(absoluteImagePath+"whatsThatNoise12.png");
+  Sound wTNSound4 = new Sound(shush, 384, 518, 495, 547, 1, 1);
+  wTNPage12.addNewSound(wTNSound4); 
+  currentBook.addNewPage(wTNPage12);
+
+  Page wTNPage13 = new Page(absoluteImagePath+"whatsThatNoise13.png");
+  Sound wTNSound5 = new Sound(baa, 398, 513, 492, 555, 1, 1);
+  wTNPage13.addNewSound(wTNSound5); 
+  currentBook.addNewPage(wTNPage13);
+
+  Page wTNPage14 = new Page(absoluteImagePath+"whatsThatNoise14.png");
+  currentBook.addNewPage(wTNPage14);
+
+  Page wTNPage15 = new Page(absoluteImagePath+"whatsThatNoise15.png");
+  currentBook.addNewPage(wTNPage15);
+
+  Page wTNPage16 = new Page(absoluteImagePath+"whatsThatNoise16.png");
+  currentBook.addNewPage(wTNPage16);
+
+  Page wTNPage17 = new Page(absoluteImagePath+"whatsThatNoise17.png");
+  currentBook.addNewPage(wTNPage17);
+
+  Page wTNPage18 = new Page(absoluteImagePath+"whatsThatNoise18.png");
+  Sound wTNSound6 = new Sound(shush, 376, 512, 508, 554, 1, 1);
+  wTNPage18.addNewSound(wTNSound6); 
+  currentBook.addNewPage(wTNPage18);
+
+  Page wTNPage19 = new Page(absoluteImagePath+"whatsThatNoise19.png");
+  Sound wTNSound7 = new Sound(zzz, 316, 516, 586, 546, 1, 2);
+  wTNPage19.addNewSound(wTNSound7); 
+  currentBook.addNewPage(wTNPage19);
+
+  Page wTNPage20 = new Page(absoluteImagePath+"whatsThatNoise20.png");
+  currentBook.addNewPage(wTNPage20);
+
+  Page wTNPage21 = new Page(absoluteImagePath+"whatsThatNoise21.png");
+  currentBook.addNewPage(wTNPage21);
+
+  Page wTNPage22 = new Page(absoluteImagePath+"whatsThatNoise22.png");
+  currentBook.addNewPage(wTNPage22);
+
+  Page wTNPage23 = new Page(absoluteImagePath+"whatsThatNoise23.png");
+  currentBook.addNewPage(wTNPage23);
+
+  Page wTNPage24 = new Page(absoluteImagePath+"whatsThatNoise24.png");
+  currentBook.addNewPage(wTNPage24);
+
+  Page wTNPage25 = new Page(absoluteImagePath+"whatsThatNoise25.png");
+  Sound wTNSound8 = new Sound(zzz, 546, 521, 655, 544, 6, 6);
+  wTNPage25.addNewSound(wTNSound8); 
+  currentBook.addNewPage(wTNPage25);
+
+  // get images and sounds for current page (start page in this case)
+  imageIndex = 0;
+  Page current = currentBook.pages.get(imageIndex);
+  currentImage = current.pageImage;
+  currentSounds = current.sounds;
+
+  //if using audiobook, need the full audio to play on page load
+  if (technique == 3) {
+    AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"whatsThatNoise.mp3");
+    audioBook.trigger(); // works, but maybe try to automate page turning...
+  }
 }
 void draw3() {
+  //all techniques need to update the image
+  image(currentImage, 0, 0);
+
+  //if technique 2, need to also check if sounds get triggered
+  if (technique == 2) {
+    for (int i=0; i<currentSounds.size(); i++) {
+      currentSounds.get(i).checkSoundTriggered();
+    }
+  }
+
+  //if technique 3, need the full audio to play on page load
+  else if (technique == 3) {
+    //playAudio
+  }
+
+  //if technique 4, need to play sounds based on the estimated reading pace
+  else if (technique == 4) {
+    for (int i=0; i<currentSounds.size(); i++) {
+      if (currentSounds.get(i).hasPlayed == false) {
+        currentSounds.get(i).estimateSoundEffect(result, timePageLoaded);
+      }
+    }
+  }
 }
 
-//========================================== Book 4 - 
+//========================================== Book 4 - The Haunted House
 void setup4() {
+  absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/TheHauntedHouseBook/images/";
+  absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/TheHauntedHouseBook/sounds/";
+  absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/TheHauntedHouseBook/audiobook/";
+  pageLimit = 19;
+
+  minim = new Minim(this);
+  thunder_bang = minim.loadSample(absoluteSoundPath+"thunder_bang.mp3");
+  bob_bob = minim.loadSample(absoluteSoundPath+"bob_bob.mp3");
+  snake_hiss = minim.loadSample(absoluteSoundPath+"snake_hiss.mp3");
+  aargh = minim.loadSample(absoluteSoundPath+"aargh.mp3");
+  turtle_noise = minim.loadSample(absoluteSoundPath+"turtle_noise.mp3");
+  cat_scream = minim.loadSample(absoluteSoundPath+"cat_scream.mp3");
+  rat_shut_up = minim.loadSample(absoluteSoundPath+"rat_shut_up.mp3");
+  dog_bark = minim.loadSample(absoluteSoundPath+"dog_bark.mp3");
+
+
+  Page tHHPage1 = new Page(absoluteImagePath+"theHauntedHouse1.png");
+  currentBook.addNewPage(tHHPage1);
+
+  Page tHHPage2 = new Page(absoluteImagePath+"theHauntedHouse2.png");
+  currentBook.addNewPage(tHHPage2);
+  
+  Page tHHPage3 = new Page(absoluteImagePath+"theHauntedHouse3.png");
+  Sound tHHSound1 = new Sound(thunder_bang,414,520,509,547,4,8);
+  tHHPage3.addNewSound(tHHSound1);
+  currentBook.addNewPage(tHHPage3);
+  
+  Page tHHPage4 = new Page(absoluteImagePath+"theHauntedHouse4.png");
+  currentBook.addNewPage(tHHPage4);
+  
+  Page tHHPage5 = new Page(absoluteImagePath+"theHauntedHouse5.png");
+  currentBook.addNewPage(tHHPage5);
+  
+  Page tHHPage6 = new Page(absoluteImagePath+"theHauntedHouse6.png");
+  currentBook.addNewPage(tHHPage6);
+  
+  Page tHHPage7 = new Page(absoluteImagePath+"theHauntedHouse7.png");
+  currentBook.addNewPage(tHHPage7);
+  
+  Page tHHPage8 = new Page(absoluteImagePath+"theHauntedHouse8.png");
+  Sound tHHSound2 = new Sound(bob_bob,364,517,545,548,1,2);
+  tHHPage8.addNewSound(tHHSound2);
+  currentBook.addNewPage(tHHPage8);
+  
+  Page tHHPage9 = new Page(absoluteImagePath+"theHauntedHouse9.png");
+  Sound tHHSound3 = new Sound(snake_hiss,675,522,769,550,10,10);
+  tHHPage9.addNewSound(tHHSound3);
+  currentBook.addNewPage(tHHPage9);
+  
+  Page tHHPage10 = new Page(absoluteImagePath+"theHauntedHouse10.png");
+  currentBook.addNewPage(tHHPage10);
+  
+  Page tHHPage11 = new Page(absoluteImagePath+"theHauntedHouse11.png");
+  Sound tHHSound4 = new Sound(aargh,393,518,519,554,1,1);
+  tHHPage11.addNewSound(tHHSound4);
+  currentBook.addNewPage(tHHPage11);
+  
+  Page tHHPage12 = new Page(absoluteImagePath+"theHauntedHouse12.png");
+  currentBook.addNewPage(tHHPage12);
+
+  Page tHHPage13 = new Page(absoluteImagePath+"theHauntedHouse13.png");
+  currentBook.addNewPage(tHHPage13);
+  
+  Page tHHPage14 = new Page(absoluteImagePath+"theHauntedHouse14.png");
+  currentBook.addNewPage(tHHPage14);
+  
+  Page tHHPage15 = new Page(absoluteImagePath+"theHauntedHouse15.png");
+  Sound tHHSound5 = new Sound(turtle_noise,454,516,559,549,6,8);
+  tHHPage15.addNewSound(tHHSound5);
+  currentBook.addNewPage(tHHPage15);
+  
+  Page tHHPage16 = new Page(absoluteImagePath+"theHauntedHouse16.png");
+  currentBook.addNewPage(tHHPage16);
+  
+  Page tHHPage17 = new Page(absoluteImagePath+"theHauntedHouse17.png");
+  Sound tHHSound6 = new Sound(cat_scream,210,520,275,550,1,8);
+  tHHPage17.addNewSound(tHHSound6);
+  currentBook.addNewPage(tHHPage17);
+  
+  Page tHHPage18 = new Page(absoluteImagePath+"theHauntedHouse18.png");
+  Sound tHHSound7 = new Sound(rat_shut_up,379,511,527,552,1,2);
+  tHHPage18.addNewSound(tHHSound7);
+  currentBook.addNewPage(tHHPage18);
+  
+  Page tHHPage19 = new Page(absoluteImagePath+"theHauntedHouse19.png");
+  currentBook.addNewPage(tHHPage19);
+
+  Page tHHPage20 = new Page(absoluteImagePath+"theHauntedHouse20.png");
+  Sound tHHSound8 = new Sound(dog_bark,559,520,613,546,7,10);
+  tHHPage20.addNewSound(tHHSound8);
+  currentBook.addNewPage(tHHPage20);
+
+
+// get images and sounds for current page (start page in this case)
+  imageIndex = 0;
+  Page current = currentBook.pages.get(imageIndex);
+  currentImage = current.pageImage;
+  currentSounds = current.sounds;
+
+  //if using audiobook, need the full audio to play on page load
+  if (technique == 3) {
+    AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"theHauntedHouse.mp3");
+    audioBook.trigger(); // works, but maybe try to automate page turning...
+  }
+
+
 }
 void draw4() {
+  //all techniques need to update the image
+  image(currentImage, 0, 0);
+
+  //if technique 2, need to also check if sounds get triggered
+  if (technique == 2) {
+    for (int i=0; i<currentSounds.size(); i++) {
+      currentSounds.get(i).checkSoundTriggered();
+    }
+  }
+
+  //if technique 3, need the full audio to play on page load
+  else if (technique == 3) {
+    //playAudio
+  }
+
+  //if technique 4, need to play sounds based on the estimated reading pace
+  else if (technique == 4) {
+    for (int i=0; i<currentSounds.size(); i++) {
+      if (currentSounds.get(i).hasPlayed == false) {
+        currentSounds.get(i).estimateSoundEffect(result, timePageLoaded);
+      }
+    }
+  }
 }
 //========================================== Task Completion Screen
 void setup5() {
