@@ -140,17 +140,18 @@ void draw() {
     draw0();
     break;
   case 1:
-    draw1();
+    checkTechnique();
     break;
   case 2:
-    draw2();
+    checkTechnique();
     break;
   case 3:
-    draw3();
+    checkTechnique();
     break;
   case 4:
-    draw4();
+    checkTechnique();
     break;
+
   case 5:
     draw5();
     break;
@@ -211,16 +212,16 @@ void keyPressed() {
       println("Main Menu Selected");
       setState(0);
     } else if (key == '1') {
-      println("Thomas Book Selected");
+      println("Happy Birthday Thomas Selected");
       setState(1);
     } else if (key == '2') {
-      println("Biscuit Book Selected");
+      println("Biscuit Wants to Play Selected");
       setState(2);
     } else if (key == '3') {
-      println("Book Selected");
+      println("What's That Noise? Selected");
       setState(3);
     } else if (key == '4') {
-      println("Book Selected");
+      println("The Haunted House Selected");
       setState(4);
     }
   }
@@ -242,9 +243,9 @@ void keyPressed() {
         imageIndex++; // if ENTER button pressed, move to next image in array
         currentImage = currentBook.pages.get(imageIndex).pageImage;      
         currentSounds = currentBook.pages.get(imageIndex).sounds;
-        println("imageIndex = " + imageIndex);
+        //println("imageIndex = " + imageIndex);
         timePageLoaded = millis();
-        println("timePageLoaded="+timePageLoaded);
+        //println("timePageLoaded="+timePageLoaded);
       } else if (key == BACKSPACE) {
         imageIndex--; // if BACKSPACE button pressed, move back to previous image
         currentImage = currentBook.pages.get(imageIndex).pageImage;      
@@ -254,7 +255,6 @@ void keyPressed() {
     } else if (imageIndex>=pageLimit && key == ENTER) {
       println("End Of Session");
       setState(5);
-      //exit();
     }
   }
 
@@ -376,30 +376,19 @@ void setup1() {
   //if using audiobook, need the full audio to play on page load
   if (technique == 3) {
     AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"happyBirthdayThomas.mp3");
-    audioBook.trigger(); // works, but maybe try to automate page turning...
+    audioBook.trigger();
   }
 }
 
-void draw1() {
+void checkTechnique() {
   //all techniques need to update the image
   image(currentImage, 0, 0);
 
-  //if using traditional reading method, no need to load sounds
-  if (technique == 1) {
-    // do nothing
-  }
-
   //if using eyetracker, need to check if sounds get triggered
-  else if (technique == 2) {
+  if (technique == 2) {
     for (int i=0; i<currentSounds.size(); i++) {
       currentSounds.get(i).checkSoundTriggered();
     }
-  }
-
-  //if using audiobook, need the full audio to play on page load
-  else if (technique == 3) {
-    //audio file loaded in the setup function for each book
-    //do nothing here, that is intentional
   }
 
   //if using estimated reading pace, need to play sounds based on wpm
@@ -502,33 +491,7 @@ void setup2() {
   //if using audiobook, need the full audio to play on page load
   if (technique == 3) {
     AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"biscuitWantsToPlay.mp3");
-    audioBook.trigger(); // works, but maybe try to automate page turning...
-  }
-}
-
-void draw2() {
-  //all techniques need to update the image
-  image(currentImage, 0, 0);
-
-  //if technique 2, need to also check if sounds get triggered
-  if (technique == 2) {
-    for (int i=0; i<currentSounds.size(); i++) {
-      currentSounds.get(i).checkSoundTriggered();
-    }
-  }
-
-  //if technique 3, need the full audio to play on page load
-  else if (technique == 3) {
-    //playAudio
-  }
-
-  //if technique 4, need to play sounds based on the estimated reading pace
-  else if (technique == 4) {
-    for (int i=0; i<currentSounds.size(); i++) {
-      if (currentSounds.get(i).hasPlayed == false) {
-        currentSounds.get(i).estimateSoundEffect(result, timePageLoaded);
-      }
-    }
+    audioBook.trigger();
   }
 }
 
@@ -648,32 +611,7 @@ void setup3() {
   //if using audiobook, need the full audio to play on page load
   if (technique == 3) {
     AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"whatsThatNoise.mp3");
-    audioBook.trigger(); // works, but maybe try to automate page turning...
-  }
-}
-void draw3() {
-  //all techniques need to update the image
-  image(currentImage, 0, 0);
-
-  //if technique 2, need to also check if sounds get triggered
-  if (technique == 2) {
-    for (int i=0; i<currentSounds.size(); i++) {
-      currentSounds.get(i).checkSoundTriggered();
-    }
-  }
-
-  //if technique 3, need the full audio to play on page load
-  else if (technique == 3) {
-    //playAudio
-  }
-
-  //if technique 4, need to play sounds based on the estimated reading pace
-  else if (technique == 4) {
-    for (int i=0; i<currentSounds.size(); i++) {
-      if (currentSounds.get(i).hasPlayed == false) {
-        currentSounds.get(i).estimateSoundEffect(result, timePageLoaded);
-      }
-    }
+    audioBook.trigger();
   }
 }
 
@@ -700,79 +638,79 @@ void setup4() {
 
   Page tHHPage2 = new Page(absoluteImagePath+"theHauntedHouse2.png");
   currentBook.addNewPage(tHHPage2);
-  
+
   Page tHHPage3 = new Page(absoluteImagePath+"theHauntedHouse3.png");
-  Sound tHHSound1 = new Sound(thunder_bang,414,520,509,547,4,8);
+  Sound tHHSound1 = new Sound(thunder_bang, 414, 520, 509, 547, 4, 8);
   tHHPage3.addNewSound(tHHSound1);
   currentBook.addNewPage(tHHPage3);
-  
+
   Page tHHPage4 = new Page(absoluteImagePath+"theHauntedHouse4.png");
   currentBook.addNewPage(tHHPage4);
-  
+
   Page tHHPage5 = new Page(absoluteImagePath+"theHauntedHouse5.png");
   currentBook.addNewPage(tHHPage5);
-  
+
   Page tHHPage6 = new Page(absoluteImagePath+"theHauntedHouse6.png");
   currentBook.addNewPage(tHHPage6);
-  
+
   Page tHHPage7 = new Page(absoluteImagePath+"theHauntedHouse7.png");
   currentBook.addNewPage(tHHPage7);
-  
+
   Page tHHPage8 = new Page(absoluteImagePath+"theHauntedHouse8.png");
-  Sound tHHSound2 = new Sound(bob_bob,364,517,545,548,1,2);
+  Sound tHHSound2 = new Sound(bob_bob, 364, 517, 545, 548, 1, 2);
   tHHPage8.addNewSound(tHHSound2);
   currentBook.addNewPage(tHHPage8);
-  
+
   Page tHHPage9 = new Page(absoluteImagePath+"theHauntedHouse9.png");
-  Sound tHHSound3 = new Sound(snake_hiss,675,522,769,550,10,10);
+  Sound tHHSound3 = new Sound(snake_hiss, 675, 522, 769, 550, 10, 10);
   tHHPage9.addNewSound(tHHSound3);
   currentBook.addNewPage(tHHPage9);
-  
+
   Page tHHPage10 = new Page(absoluteImagePath+"theHauntedHouse10.png");
   currentBook.addNewPage(tHHPage10);
-  
+
   Page tHHPage11 = new Page(absoluteImagePath+"theHauntedHouse11.png");
-  Sound tHHSound4 = new Sound(aargh,393,518,519,554,1,1);
+  Sound tHHSound4 = new Sound(aargh, 393, 518, 519, 554, 1, 1);
   tHHPage11.addNewSound(tHHSound4);
   currentBook.addNewPage(tHHPage11);
-  
+
   Page tHHPage12 = new Page(absoluteImagePath+"theHauntedHouse12.png");
   currentBook.addNewPage(tHHPage12);
 
   Page tHHPage13 = new Page(absoluteImagePath+"theHauntedHouse13.png");
   currentBook.addNewPage(tHHPage13);
-  
+
   Page tHHPage14 = new Page(absoluteImagePath+"theHauntedHouse14.png");
   currentBook.addNewPage(tHHPage14);
-  
+
   Page tHHPage15 = new Page(absoluteImagePath+"theHauntedHouse15.png");
-  Sound tHHSound5 = new Sound(turtle_noise,454,516,559,549,6,8);
+  Sound tHHSound5 = new Sound(turtle_noise, 454, 516, 559, 549, 6, 8);
   tHHPage15.addNewSound(tHHSound5);
   currentBook.addNewPage(tHHPage15);
-  
+
   Page tHHPage16 = new Page(absoluteImagePath+"theHauntedHouse16.png");
   currentBook.addNewPage(tHHPage16);
-  
+
   Page tHHPage17 = new Page(absoluteImagePath+"theHauntedHouse17.png");
-  Sound tHHSound6 = new Sound(cat_scream,210,520,275,550,1,8);
+  Sound tHHSound6 = new Sound(cat_scream, 210, 520, 275, 550, 1, 8);
   tHHPage17.addNewSound(tHHSound6);
   currentBook.addNewPage(tHHPage17);
-  
+
   Page tHHPage18 = new Page(absoluteImagePath+"theHauntedHouse18.png");
-  Sound tHHSound7 = new Sound(rat_shut_up,379,511,527,552,1,2);
+  Sound tHHSound7 = new Sound(rat_shut_up, 379, 511, 527, 552, 1, 2);
   tHHPage18.addNewSound(tHHSound7);
   currentBook.addNewPage(tHHPage18);
-  
+
   Page tHHPage19 = new Page(absoluteImagePath+"theHauntedHouse19.png");
   currentBook.addNewPage(tHHPage19);
 
   Page tHHPage20 = new Page(absoluteImagePath+"theHauntedHouse20.png");
-  Sound tHHSound8 = new Sound(dog_bark,559,520,613,546,7,10);
+  Sound tHHSound8 = new Sound(dog_bark, 559, 520, 613, 546, 7, 10);
   tHHPage20.addNewSound(tHHSound8);
   currentBook.addNewPage(tHHPage20);
 
 
-// get images and sounds for current page (start page in this case)
+  // get images and sounds for current page (start page in this case)
   imageIndex = 0;
   Page current = currentBook.pages.get(imageIndex);
   currentImage = current.pageImage;
@@ -783,34 +721,8 @@ void setup4() {
     AudioSample audioBook = minim.loadSample(absoluteAudiobookPath+"theHauntedHouse.mp3");
     audioBook.trigger(); // works, but maybe try to automate page turning...
   }
-
-
 }
-void draw4() {
-  //all techniques need to update the image
-  image(currentImage, 0, 0);
 
-  //if technique 2, need to also check if sounds get triggered
-  if (technique == 2) {
-    for (int i=0; i<currentSounds.size(); i++) {
-      currentSounds.get(i).checkSoundTriggered();
-    }
-  }
-
-  //if technique 3, need the full audio to play on page load
-  else if (technique == 3) {
-    //playAudio
-  }
-
-  //if technique 4, need to play sounds based on the estimated reading pace
-  else if (technique == 4) {
-    for (int i=0; i<currentSounds.size(); i++) {
-      if (currentSounds.get(i).hasPlayed == false) {
-        currentSounds.get(i).estimateSoundEffect(result, timePageLoaded);
-      }
-    }
-  }
-}
 //========================================== Task Completion Screen
 void setup5() {
   techniqueTitle = "End of Task";
