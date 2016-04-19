@@ -33,7 +33,7 @@ String absoluteImagePath;
 String absoluteSoundPath;
 String absoluteAudiobookPath;
 int pageLimit;
-Book currentBook = new Book();
+Book currentBook;// = new Book();
 float timePageLoaded;
 
 //variables needed for eyetracker
@@ -286,7 +286,7 @@ void draw0() {
 
 //========================================== Book 1 - Happy Birthday Thomas
 void setup1() {
-
+  currentBook = new Book();
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/sounds/";
   absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/ThomasBook/audiobook/";
@@ -403,6 +403,8 @@ void checkTechnique() {
 
 //========================================== Book 2 - Biscuit Wants to Play
 void setup2() {
+  currentBook = new Book();
+  
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/biscuitBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/biscuitBook/sounds/";
   absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/biscuitBook/audiobook/";
@@ -497,6 +499,7 @@ void setup2() {
 
 //========================================== Book 3 - What's That Noise?
 void setup3() {
+  currentBook = new Book();
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/WhatsThatNoiseBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/WhatsThatNoiseBook/sounds/";
   absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/WhatsThatNoiseBook/audiobook/";
@@ -617,6 +620,7 @@ void setup3() {
 
 //========================================== Book 4 - The Haunted House
 void setup4() {
+  currentBook = new Book();
   absoluteImagePath = "/Users/peterbennington/git/audio-augmented-reading-honours/TheHauntedHouseBook/images/";
   absoluteSoundPath = "/Users/peterbennington/git/audio-augmented-reading-honours/TheHauntedHouseBook/sounds/";
   absoluteAudiobookPath = "/Users/peterbennington/git/audio-augmented-reading-honours/TheHauntedHouseBook/audiobook/";
